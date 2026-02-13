@@ -1,0 +1,89 @@
+﻿@model IEnumerable<TestTaskCVS.Models.Employee>
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Upload CSV</h2>
+
+    <form asp-action="Upload" method="post" enctype="multipart/form-data" class="row g-3 mb-3">
+        <div class="col-auto">
+            <input type="file" name="file" class="form-control" />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </div>
+    </form>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="mb-3">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search..." />
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped align-middle" id="employeesTable">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Date Of Birth</th>
+                    <th>Married</th>
+                    <th>Phone</th>
+                    <th>Salary</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr data-id="@item.Id">
+                        <td>
+                            <input type="text" value="@item.Name" class="form-control editable" />
+                        </td>
+                        <td>
+                            <input type="date" value="@item.DateOfBirth.ToString("yyyy-MM-dd")" class="form-control editable" />
+                        </td>
+                        <td>
+                            <select class="form-select editable">
+                                @if (item.Married)
+                                {
+                                    <option value="true" selected>True</option>
+                                    <option value="false">False</option>
+                                }
+                                else
+                                {
+                                    <option value="true">True</option>
+                                    <option value="false" selected>False</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" value="@item.Phone" class="form-control editable" />
+                        </td>
+                        <td>
+                            <input type="number"
+                                   value="@item.Salary.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)"
+                                   step="0.01"
+                                   class="form-control editable" />
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-danger"
+                                    onclick="deleteRow(@item.Id)">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    <script src="~/js/employees.js"></script>
+}
